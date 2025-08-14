@@ -31,32 +31,41 @@ describe("Calculator", () => {
     expect(getDisplay().value).toBe('0');
   });
 
+  // Es un test asíncrono, estamos esperando que pase tiempo para evaluar resultado
   it("Muestra un número", async () => {
     component.inputNumber("7");
-    await nextTick(); // Es un test asíncrono, estamos esperando que pase tiempo para evaluar resultado
+    await nextTick(); 
     expect(component.output).toBe("7");
     expect(getDisplay().value).toBe("7");
   });
 
-  // it("Añade más números", () => {
-  //   vm.inputNumber("7");
-  //   vm.inputNumber("8");
-  //   expect(getDisplay()).toBe("78");
-  // });
+  it("Añade más números", async() => {
+    component.inputNumber("7");
+    await nextTick();
+    component.inputNumber("8");
+    await nextTick();
+    expect(getDisplay().value).toBe("78");
+  });
 
-  // it("Muestra números decimales", () => {
-  //   vm.inputNumber("1");
-  //   vm.inputDecimal();
-  //   vm.inputNumber("5");
-  //   expect(getDisplay()).toBe("1.5");
-  // });
+  it("Muestra números decimales", async() => {
+    component.inputNumber("1");
+    await nextTick();
+    component.inputDecimal();
+    await nextTick();
+    component.inputNumber("5");
+    await nextTick();
+    expect(getDisplay().value).toBe("1.5");
+  });
 
-  // it("Previene mostrar numeros decimales dos veces", () => {
-  //   vm.inputNumber("1");
-  //   vm.inputDecimal();
-  //   vm.inputDecimal();
-  //   expect(getDisplay()).toBe("1.");
-  // });
+  it("Previene mostrar numeros decimales dos veces", async() => {
+    component.inputNumber("1");
+    await nextTick();
+    component.inputDecimal();
+    await nextTick();
+    component.inputDecimal();
+    await nextTick();
+    expect(getDisplay().value).toBe("1.");
+  });
 
   // // Operaciones con dos dígitos
   // describe("Operaciones binarias: Conjunto de operaciones con dos números", () => {

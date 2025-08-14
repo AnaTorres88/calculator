@@ -15,7 +15,23 @@
      * @param {number} num - Un número real
      */
     function inputNumber(num) {
-        output.value = num;
+        if (waitingForNewValue.value) {
+            output.value = num;
+            waitingForNewValue.value = false;
+            isDecimal.value = false;
+        } else {
+            output.value = output.value === '0' ? num : output.value + num;
+        }
+    }
+    function inputDecimal() {
+        if (waitingForNewValue.value) {
+            output.value = '0.';
+            waitingForNewValue.value = false;
+            isDecimal.value = true;
+        } else if (!isDecimal.value && output.value.indexOf('.') === -1) {
+            output.value += '.';
+            isDecimal.value = true;
+        }
     }
 </script>
 
@@ -50,7 +66,7 @@
             <button class="btn btn-number" @click="inputNumber('3')">3</button>
             <button class="btn btn-operator"> √ </button>
             <button class="btn btn-number" @click="inputNumber('0')">0</button>
-            <button class="btn btn-number" @click="inputNumber('.')">.</button>
+            <button class="btn btn-number" @click="inputDecimal">.</button>
             <button class="btn btn-equals" rowspan="2">=</button>
         </div>
     </section>
