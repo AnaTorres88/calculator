@@ -1,18 +1,21 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, beforeEach } from 'vitest'
+import { nextTick } from 'vue';
 // Se importa el componente cuandos e acreado
 import Calculator from '@/components/Calculator.vue'
 
 // metodo describe del framework de tests para englobar los tests del componente
 describe("Calculator", () => {
     let wrapper; // wrapper del componente, instancia retornada por mount
-    let component = wrapper?.vm; // propiedad que nos da acceso a los métodos del componente
+    let component;
     beforeEach(() => {
         wrapper = mount(Calculator);
+        component = wrapper?.vm; // propiedad que nos da acceso a los métodos del componente
     });
 
-  // const getDisplay = () => traer el resultado o output
+  const getDisplay = () => wrapper.find('.display').element;
+  const displayStringValue = () => parseFloat(getDisplay().text());
 
   // Primera prueba renderizar el componente
     it("Renderiza el componente", () => {
@@ -20,17 +23,20 @@ describe("Calculator", () => {
         expect(wrapper.find("p").text()).toBe(paragraph);
     });
 
-  // TODO: Crear métodos y testearlos
   // Mostrar números
 
-  // it("Empieza con 0", () => {
-  //   expect(getDisplay()).toBe("0");
-  // });
+  it("Empieza con 0", () => {
+    expect(wrapper.find('.display').text()).toBe('');
+    expect(getDisplay().placeholder).toBe('0');
+    expect(getDisplay().value).toBe('0');
+  });
 
-  // it("Muestra un número", () => {
-  //   vm.inputNumber("7");
-  //   expect(getDisplay()).toBe("7");
-  // });
+  it("Muestra un número", async () => {
+    component.inputNumber("7");
+    await nextTick(); // Es un test asíncrono, estamos esperando que pase tiempo para evaluar resultado
+    expect(component.output).toBe("7");
+    expect(getDisplay().value).toBe("7");
+  });
 
   // it("Añade más números", () => {
   //   vm.inputNumber("7");

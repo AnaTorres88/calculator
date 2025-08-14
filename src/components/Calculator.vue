@@ -1,36 +1,56 @@
 <script setup>
-import { ref } from 'vue';
+    import { ref } from 'vue';
+    // Control de estados para input, output y valores
+    const output = ref('0');
+    const input = ref('0');
+    const previousValue = ref(null);
+    const currentOperation = ref(null);
+    const waitingForNewValue = ref(false);
+    const isDecimal = ref(false);
 
+
+    /**
+     * Función que se ejecuta al hacer click en un número, pasa números al output
+     * que también está enlazado con el element input de html
+     * @param {number} num - Un número real
+     */
+    function inputNumber(num) {
+        output.value = num;
+    }
 </script>
 
 <template>
     <section class="calculator">
         <p> Efectua operaciones básicas como suma, resta, división, multiplicación, raíz cuadrada y potencia</p>
-        <input type="text" class="display" />
+        <input type="text"
+            class="display"
+            v-model="output"
+            readonly
+            :placeholder="output || '0'"/>
 
         <div class="buttons">
-            <button class="btn btn-clear">C</button>
-            <button class="btn btn-operator">x/-</button>
+            <button class="btn btn-clear" >C</button>
+            <button class="btn btn-operator" >x/-</button>
             <button class="btn btn-operator">x^y</button>
             <button class="btn btn-operator">/</button>
             <button class="btn btn-operator">×</button>
-            <button class="btn btn-number">7</button>
+            <button class="btn btn-number" @click="inputNumber('7')">7</button>
 
-            <button class="btn btn-number">8</button>
-            <button class="btn btn-number">9</button>
+            <button class="btn btn-number" @click="inputNumber('8')">8</button>
+            <button class="btn btn-number" @click="inputNumber('9')">9</button>
             <button class="btn btn-operator">-</button>
-            <button class="btn btn-number">4</button>
+            <button class="btn btn-number" @click="inputNumber('4')">4</button>
 
-            <button class="btn btn-number">5</button>
-            <button class="btn btn-number">6</button>
+            <button class="btn btn-number" @click="inputNumber('5')">5</button>
+            <button class="btn btn-number" @click="inputNumber('6')">6</button>
             <button class="btn btn-operator">+</button>
-            <button class="btn btn-number">1</button>
+            <button class="btn btn-number" @click="inputNumber('1')">1</button>
 
-            <button class="btn btn-number">2</button>
-            <button class="btn btn-number">3</button>
+            <button class="btn btn-number" @click="inputNumber('2')">2</button>
+            <button class="btn btn-number" @click="inputNumber('3')">3</button>
             <button class="btn btn-operator"> √ </button>
-            <button class="btn btn-number">0</button>
-            <button class="btn btn-number">.</button>
+            <button class="btn btn-number" @click="inputNumber('0')">0</button>
+            <button class="btn btn-number" @click="inputNumber('.')">.</button>
             <button class="btn btn-equals" rowspan="2">=</button>
         </div>
     </section>
