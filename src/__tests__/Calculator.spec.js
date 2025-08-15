@@ -183,64 +183,72 @@ describe("Calculator", () => {
         expect(getDisplay().value).toBe("0");
     });
 
-    //   it("Calcula potencia", () => {
-    //     vm.inputNumber("2");
-    //     vm.inputOperator("pow");
-    //     vm.inputNumber("3");
-    //     vm.calculate();
-    //     expect(getDisplay()).toBe("8");
-    //   });
-    //   it('Calcula la potencia con precisión mayor a 1e-3', () => {
-    //       vm.inputNumber('9')
-    //       vm.inputOperator('pow')
-    //       vm.inputNumber('0.5')
-    //       vm.calculate()
-    //       expect(displayValue()).toBeCloseTo(3, 4)
-    //   })
+    it("Calcula potencia", async () => {
+        component.inputNumber("2");
+        await nextTick();
+        component.inputOperator("pow");
+        await nextTick();
+        component.inputNumber("3");
+        await nextTick();
+        component.calculate();
+        await nextTick();
+        expect(getDisplay().value).toBe("8");
+    });
+    // TODO: Test falla, corregir función
+    it('Calcula la potencia con precisión mayor a 1e-3', async () => {
+        component.inputNumber('9');
+        await nextTick();
+        component.inputOperator('pow');
+        await nextTick();
+        component.inputNumber('0.5');
+        await nextTick();
+        component.calculate();
+        expect(displayValue().value).toBeCloseTo(3, 4);
+    });
   });
 
   // describe("Operaciones unarias: con un solo dígito", () => {
   //   it("Convierte numero positivo a negativo", () => {
-  //     vm.inputNumber("5");
-  //     vm.inputOperator("negate");
+  //     component.inputNumber("5");
+  //     component.inputOperator("negate");
   //     expect(getDisplay()).toBe("-5");
   //   });
   //   it('Conversión de signo funciona para decimales también', () => {
-  //       vm.inputNumber('5.1234')
-  //       vm.inputOperator('+/-')
+  //       component.inputNumber('5.1234')
+  //       component.inputOperator('+/-')
   //       expect(displayValue()).toBeCloseTo(-5.1234, 4)
   //   });
   //   it("Calcula la raíz cuadrada de un número", () => {
-  //     vm.inputNumber("9");
-  //     vm.inputOperator("sqrt");
+  //     component.inputNumber("9");
+  //     component.inputOperator("sqrt");
   //     expect(parseFloat(getDisplay())).toBeCloseTo(3);
   //   });
 
   //   it('Calcula la raíz cuadrada con precisión mayor a 1e-3', () => {
-  //       vm.inputNumber('2')
-  //       vm.inputOperator('sqrt')
+  //       component.inputNumber('2')
+  //       component.inputOperator('sqrt')
   //       expect(displayValue()).toBeCloseTo(Math.SQRT2, 4)
   //   });
 
   //   it("Muestra un console.error para una raíz cuadrada de número negativo", () => {
   //     console.error = jest.fn();
-  //     vm.inputNumber("5");
-  //     vm.inputOperator("negate");
-  //     vm.inputOperator("sqrt");
+  //     component.inputNumber("5");
+  //     component.inputOperator("negate");
+  //     component.inputOperator("sqrt");
   //     expect(console.error).toHaveBeenCalledWith(
-  //       "¡No se puede calcular la raíz cuadrada de un número! negativo"
+  //       "¡No se puede calcular la raíz cuadrada de un número negativo!"
   //     );
   //     expect(getDisplay()).toBe("NaN");
   //   });
   // });
 
   // it("Limpia la calculadora", () => {
-  //   vm.inputNumber("7");
-  //   vm.inputOperator("add");
-  //   vm.inputNumber("2");
-  //   vm.clear();
+  //   component.inputNumber("7");
+  //   component.inputOperator("add");
+  //   component.inputNumber("2");
+  //   component.clear();
   //   expect(getDisplay()).toBe("0");
-  //   expect(vm.previousValue).toBeNull();
-  //   expect(vm.currentOperation).toBeNull();
+  //   expect(component.previousValue).toBeNull();
+  //   expect(component.currentOperation).toBeNull();
   // });
 });

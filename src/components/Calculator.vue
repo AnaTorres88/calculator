@@ -8,7 +8,14 @@
     const waitingForNewValue = ref(false);
     const isDecimal = ref(false);
 
-
+        // Auxiliares devuelve el entero más grande menor o igual a ese número
+        function floor(num) {
+            return num >= 0 ? num - (num % 1) : num - (num % 1) - (num % 1 === 0 ? 0 : 1);
+        }
+        // Valor absoluto
+        function abs(integer) {
+            return integer < 0 ? -integer : integer;
+        }
     /**
      * Función que se ejecuta al hacer click en un número, pasa números al output
      * que también está enlazado con el element input de html
@@ -95,6 +102,9 @@
             case 'sub': return substraction(prev, current);
             case 'mult': return multiplication(prev, current); 
             case 'div': return division(prev, current);
+            case 'pow': return pow(prev, current);
+            case 'sqrt': return sqrt(current);
+            case 'negate': return negate(current);
             default: return current;
         }
     }
@@ -108,8 +118,39 @@
         return 0; 
     } 
         return a / b; 
-    } 
+    }
     function multiplication(a, b) { return a * b; }
+
+    // DE: https://www.geeksforgeeks.org/javascript/javascript-program-to-find-the-square-root/
+    function sqrt(number) {
+        if (number < 0) {
+            console.error('¡No se puede calcular la raíz cuadrada de un número negativo!');
+            return NaN;
+        }
+        if (number === 0) {
+            return 0;
+        }
+        let guess = number / 2;
+        const tolerance = 0.000001;
+        while (abs(guess * guess - number) > tolerance) {
+            guess = (guess + number / guess) / 2;
+        }
+        return guess;
+    }
+    // DE: https://www.geeksforgeeks.org/dsa/write-you-own-power-without-using-multiplication-and-division/
+    function pow(a, b) {
+        if (b == 0) {
+            return 1;
+        }
+        if (b % 2 == 0) {
+            return pow(a * a, b / 2);
+        } else {
+            return a * pow(a * a, (b - 1) / 2);
+        }
+    }
+    function negate(a) {
+        return -a;
+    }
 </script>
 
 <template>
@@ -141,7 +182,7 @@
 
             <button class="btn btn-number" @click="inputNumber('2')">2</button>
             <button class="btn btn-number" @click="inputNumber('3')">3</button>
-            <button class="btn btn-operator" @click="inputOperator('negate')"> √ </button>
+            <button class="btn btn-operator" @click="inputOperator('sqrt')"> √ </button>
             <button class="btn btn-number" @click="inputNumber('0')">0</button>
             <button class="btn btn-number" @click="inputDecimal">.</button>
             <button class="btn btn-equals" rowspan="2" @click="calculate" >=</button>
