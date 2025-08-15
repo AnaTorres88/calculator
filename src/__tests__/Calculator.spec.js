@@ -254,13 +254,17 @@ describe("Calculator", () => {
     });
   });
 
-  // it("Limpia la calculadora", () => {
-  //   component.inputNumber("7");
-  //   component.inputOperator("add");
-  //   component.inputNumber("2");
-  //   component.clear();
-  //   expect(getDisplay()).toBe("0");
-  //   expect(component.previousValue).toBeNull();
-  //   expect(component.currentOperation).toBeNull();
-  // });
+  it("Limpia la calculadora", async() => {
+    component.inputNumber("7");
+    await nextTick();
+    component.inputOperator("add");
+    await nextTick();
+    component.inputNumber("2");
+    await nextTick();
+    component.clear();
+    await nextTick();
+    expect(getDisplay().value).toBe("0");
+    expect(component.previousValue).toBeNull();
+    expect(component.currentOperation).toBeNull();
+  });
 });

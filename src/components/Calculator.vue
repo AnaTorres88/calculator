@@ -202,12 +202,22 @@ function pow(a, b) {
         }
         return sum;
     }
+    // Niega un valor
     function negate(a) {
         let current= Number(a);
          if (current !== 0) {
             current = current * -1;
         }
         return current;
+    }
+    // Limpiar
+    function clear() {
+        output.value = '0';
+        input.value = '0';
+        previousValue.value = null;
+        currentOperation.value = null;
+        waitingForNewValue.value = false;
+        isDecimal.value = false;
     }
 </script>
 
@@ -221,7 +231,7 @@ function pow(a, b) {
             :placeholder="output || '0'"/>
 
         <div class="buttons">
-            <button class="btn btn-clear" >C</button>
+            <button class="btn btn-clear" @click="clear">C</button>
             <button class="btn btn-operator" @click="inputOperator('negate')">+/-</button>
             <button class="btn btn-operator" @click="inputOperator('pow')">x^y</button>
             <button class="btn btn-operator" @click="inputOperator('div')">/</button>
