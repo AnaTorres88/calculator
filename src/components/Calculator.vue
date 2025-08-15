@@ -222,8 +222,8 @@ function pow(a, b) {
 </script>
 
 <template>
+    <p> Efectua operaciones básicas como suma, resta, división, multiplicación, raíz cuadrada y potencia</p>
     <section class="calculator">
-        <p> Efectua operaciones básicas como suma, resta, división, multiplicación, raíz cuadrada y potencia</p>
         <input type="text"
             class="display"
             v-model="output"
@@ -274,7 +274,8 @@ function pow(a, b) {
         border-radius: 20px;
         padding: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        width: auto;
+        max-width: 400px;
+        margin: 0 auto;
     }
 
     .display {
