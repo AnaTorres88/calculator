@@ -75,20 +75,28 @@
      * Al final se espera un nuevo valor, se guarda el operador actual y isDecimal vuelve a su valor original.
      * @param {string} operator - Una cadena de caracteres
      */
-    function inputOperator(operator) {
-        const inputValue = parseFloat(output.value);
-        if (previousValue.value === null) {
-            previousValue.value = inputValue;
+        function inputOperator(operator) {
+            const inputValue = parseFloat(output.value);
+
+            // Negar inmediatamente
+            if (operator === "negate") {
+                output.value = String(negate(inputValue));
+                return; // retornar, para no pasar por la demás lógica
+            }
+
+            if (previousValue.value === null) {
+                previousValue.value = inputValue;
+            }
+            else if (currentOperation.value && !waitingForNewValue.value) {
+                const result = performCalculation();
+                output.value = String(result);
+                previousValue.value = result;
+            }
+            
+            waitingForNewValue.value = true;
+            currentOperation.value = operator;
+            isDecimal.value = false;
         }
-        else if (currentOperation.value && !waitingForNewValue.value) {
-            const result = performCalculation();
-            output.value = String(result);
-            previousValue.value = result;
-        }
-        waitingForNewValue.value = true;
-        currentOperation.value = operator; 
-        isDecimal.value = false; 
-    }
     /**
      * Función Para obtener valor previo y actual
      * Manda a llamar a la función adecuada para cada operación segun el valo rque tenga
@@ -137,19 +145,62 @@
         }
         return guess;
     }
-    // DE: https://www.geeksforgeeks.org/dsa/write-you-own-power-without-using-multiplication-and-division/
-    function pow(a, b) {
-        if (b == 0) {
-            return 1;
-        }
-        if (b % 2 == 0) {
+// DE: https://www.geeksforgeeks.org/dsa/write-you-own-power-without-using-multiplication-and-division/
+function pow(a, b) {
+    // Si la base es 0
+    if (b === 0) return 1;
+
+    // Si hay exponente negativo
+    if (b < 0) return 1 / pow(a, -b);
+
+    // Si la base es 0.5
+    if (b === 0.5) return sqrt(a);
+
+    // Si el exponente es un número entero
+    if (Number.isInteger(b)) {
+        if (b % 2 === 0) {
             return pow(a * a, b / 2);
         } else {
             return a * pow(a * a, (b - 1) / 2);
         }
     }
+
+    // Para otros exponentes
+    return expApprox(b * lnApprox(a));
+}
+
+    // Aproximación Log. Natural
+    function lnApprox(x) {
+        if (x <= 0) return NaN;
+        let y = (x - 1) / (x + 1);
+        let y2 = y * y;
+        let sum = 0;
+        let term = y;
+        let n = 1;
+        while (n < 50) {
+            sum += term / n;
+            term *= y2;
+            n += 2;
+        }
+        return 2 * sum;
+    }
+
+    // Aproximación exponencial de Taylor
+    function expApprox(x) {
+        let term = 1;
+        let sum = 1;
+        for (let i = 1; i < 30; i++) {
+            term *= x / i;
+            sum += term;
+        }
+        return sum;
+    }
     function negate(a) {
-        return -a;
+        let current= Number(a);
+         if (current !== 0) {
+            current = current * -1;
+        }
+        return current;
     }
 </script>
 
@@ -164,7 +215,7 @@
 
         <div class="buttons">
             <button class="btn btn-clear" >C</button>
-            <button class="btn btn-operator" @click="inputOperator('negate')">x/-</button>
+            <button class="btn btn-operator" @click="inputOperator('negate')">+/-</button>
             <button class="btn btn-operator" @click="inputOperator('pow')">x^y</button>
             <button class="btn btn-operator" @click="inputOperator('div')">/</button>
             <button class="btn btn-operator" @click="inputOperator('mult')">×</button>
