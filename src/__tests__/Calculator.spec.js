@@ -223,28 +223,35 @@ describe("Calculator", () => {
         await nextTick();
         expect(Number(getDisplay().value)).toBeCloseTo(-5.1234, 4);
     });
-    // it("Calcula la raíz cuadrada de un número", async() => {
-    //   component.inputNumber("9");
-    //   component.inputOperator("sqrt");
-    //   expect(parseFloat(getDisplay())).toBeCloseTo(3);
-    // });
+    it("Calcula la raíz cuadrada de un número", async() => {
+        component.inputNumber("9");
+        await nextTick();
+        component.inputOperator("sqrt");
+        await nextTick();
+        expect(parseFloat(getDisplay().value)).toBeCloseTo(3);
+    });
 
-    // it('Calcula la raíz cuadrada con precisión mayor a 1e-3', async() => {
-    //     component.inputNumber('2')
-    //     component.inputOperator('sqrt')
-    //     expect(displayValue()).toBeCloseTo(Math.SQRT2, 4)
-    // });
+    it('Calcula la raíz cuadrada con precisión mayor a 1e-3', async() => {
+        component.inputNumber('2');
+        await nextTick();
+        component.inputOperator('sqrt');
+        await nextTick();
+        expect(Number(getDisplay().value)).toBeCloseTo(Math.SQRT2, 4);
+    });
 
-    // it("Muestra un console.error para una raíz cuadrada de número negativo", async() => {
-    //   console.error = jest.fn();
-    //   component.inputNumber("5");
-    //   component.inputOperator("negate");
-    //   component.inputOperator("sqrt");
-    //   expect(console.error).toHaveBeenCalledWith(
-    //     "¡No se puede calcular la raíz cuadrada de un número negativo!"
-    //   );
-    //   expect(getDisplay()).toBe("NaN");
-    // });
+    it("Muestra un console.error para una raíz cuadrada de número negativo", async() => {
+        const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        component.inputNumber("5");
+        await nextTick();
+        component.inputOperator("negate");
+        await nextTick();
+        component.inputOperator("sqrt");
+        await nextTick();
+        expect(consoleMock).toHaveBeenCalledWith(
+        "¡No se puede calcular la raíz cuadrada de un número negativo!"
+        );
+        expect(getDisplay().value).toBe("NaN");
+    });
   });
 
   // it("Limpia la calculadora", () => {

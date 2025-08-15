@@ -78,12 +78,21 @@
         function inputOperator(operator) {
             const inputValue = parseFloat(output.value);
 
-            // Negar inmediatamente
+            // Operadores Unarios se ejecutan inmediatamente
             if (operator === "negate") {
                 output.value = String(negate(inputValue));
-                return; // retornar, para no pasar por la demás lógica
+                return;
             }
 
+            if (operator === "sqrt") {
+                const result = sqrt(inputValue);
+                output.value = String(result);
+                waitingForNewValue.value = true;
+                isDecimal.value = output.value.includes('.');
+                return;
+            }
+
+            // Operadores binarios
             if (previousValue.value === null) {
                 previousValue.value = inputValue;
             }
@@ -92,7 +101,7 @@
                 output.value = String(result);
                 previousValue.value = result;
             }
-            
+
             waitingForNewValue.value = true;
             currentOperation.value = operator;
             isDecimal.value = false;
@@ -111,8 +120,6 @@
             case 'mult': return multiplication(prev, current); 
             case 'div': return division(prev, current);
             case 'pow': return pow(prev, current);
-            case 'sqrt': return sqrt(current);
-            case 'negate': return negate(current);
             default: return current;
         }
     }
@@ -132,7 +139,7 @@
     // DE: https://www.geeksforgeeks.org/javascript/javascript-program-to-find-the-square-root/
     function sqrt(number) {
         if (number < 0) {
-            console.error('¡No se puede calcular la raíz cuadrada de un número negativo!');
+            console.error("¡No se puede calcular la raíz cuadrada de un número negativo!");
             return NaN;
         }
         if (number === 0) {
