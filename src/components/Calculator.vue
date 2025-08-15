@@ -23,6 +23,11 @@
             output.value = output.value === '0' ? num : output.value + num;
         }
     }
+    /**
+     * Función que se ejecuta al hacer click en el símbolo del punto decimal
+     * Si empieza con punto, añade 0., si no, añade el punto después de un número.
+     * Previene multiples puntos en el mismo valor
+     */
     function inputDecimal() {
         if (waitingForNewValue.value) {
             output.value = '0.';
@@ -33,6 +38,78 @@
             isDecimal.value = true;
         }
     }
+     /**
+     * Función que se ejecuta al hacer click en el símbolo igualdad.
+     * Si tenemos un operador seleccionado, un valor anterior y no estamos esperando a elegir otro valor,
+     * Se llama a la función performCalculation, el resultado se convierte a String y se guarda en variablel output
+     * Se limpian variables del estado y se indica si el rultado es decimal o no.
+     */
+    function calculate() {
+        if (
+            currentOperation.value &&
+            previousValue.value !== null &&
+            !waitingForNewValue.value
+        ) {
+            const result = performCalculation();
+            output.value = String(result);
+            previousValue.value = null;
+            currentOperation.value = null;
+            waitingForNewValue.value = true;
+            isDecimal.value =
+            typeof result === 'number' && result.toString().includes('.');
+        }
+    }
+     /**
+     * Función que se ejecuta al hacer click en un operador en la calculadora
+     * Convierte el número el valor de la variable output, si se trata del primer número
+     * que presionamos, lo guardamos en la variable previousValue. Si el operador ya tiene
+     * un valor y no estamos esperando por un nuevo valor, hacemos el cálculo y optenemos el resultado
+     * Este resultado se asigna a previousValue.
+     * Al final se espera un nuevo valor, se guarda el operador actual y isDecimal vuelve a su valor original.
+     * @param {string} operator - Una cadena de caracteres
+     */
+    function inputOperator(operator) {
+        const inputValue = parseFloat(output.value);
+        if (previousValue.value === null) {
+            previousValue.value = inputValue;
+        }
+        else if (currentOperation.value && !waitingForNewValue.value) {
+            const result = performCalculation();
+            output.value = String(result);
+            previousValue.value = result;
+        }
+        waitingForNewValue.value = true;
+        currentOperation.value = operator; 
+        isDecimal.value = false; 
+    }
+    /**
+     * Función Para obtener valor previo y actual
+     * Manda a llamar a la función adecuada para cada operación segun el valo rque tenga
+     * la variable de operador actual: currentOperation
+     */
+    function performCalculation() {
+        const prev = previousValue.value;
+        const current = parseFloat(output.value);
+        switch (currentOperation.value) {
+            case 'add': return addition(prev, current);
+            case 'sub': return substraction(prev, current);
+            case 'mult': return multiplication(prev, current); 
+            case 'div': return division(prev, current);
+            default: return current;
+        }
+    }
+
+    // Operaciones
+
+    function addition(a, b) { return a + b; } 
+    function substraction(a, b) { return a - b; } 
+    function division(a, b) { if (b === 0) { 
+        console.error('¡No se puede dividir entre cero!'); 
+        return 0; 
+    } 
+        return a / b; 
+    } 
+    function multiplication(a, b) { return a * b; }
 </script>
 
 <template>
@@ -46,28 +123,28 @@
 
         <div class="buttons">
             <button class="btn btn-clear" >C</button>
-            <button class="btn btn-operator" >x/-</button>
-            <button class="btn btn-operator">x^y</button>
-            <button class="btn btn-operator">/</button>
-            <button class="btn btn-operator">×</button>
+            <button class="btn btn-operator" @click="inputOperator('negate')">x/-</button>
+            <button class="btn btn-operator" @click="inputOperator('pow')">x^y</button>
+            <button class="btn btn-operator" @click="inputOperator('div')">/</button>
+            <button class="btn btn-operator" @click="inputOperator('mult')">×</button>
             <button class="btn btn-number" @click="inputNumber('7')">7</button>
 
             <button class="btn btn-number" @click="inputNumber('8')">8</button>
             <button class="btn btn-number" @click="inputNumber('9')">9</button>
-            <button class="btn btn-operator">-</button>
+            <button class="btn btn-operator" @click="inputOperator('sub')">-</button>
             <button class="btn btn-number" @click="inputNumber('4')">4</button>
 
             <button class="btn btn-number" @click="inputNumber('5')">5</button>
             <button class="btn btn-number" @click="inputNumber('6')">6</button>
-            <button class="btn btn-operator">+</button>
+            <button class="btn btn-operator" @click="inputOperator('add')">+</button>
             <button class="btn btn-number" @click="inputNumber('1')">1</button>
 
             <button class="btn btn-number" @click="inputNumber('2')">2</button>
             <button class="btn btn-number" @click="inputNumber('3')">3</button>
-            <button class="btn btn-operator"> √ </button>
+            <button class="btn btn-operator" @click="inputOperator('negate')"> √ </button>
             <button class="btn btn-number" @click="inputNumber('0')">0</button>
             <button class="btn btn-number" @click="inputDecimal">.</button>
-            <button class="btn btn-equals" rowspan="2">=</button>
+            <button class="btn btn-equals" rowspan="2" @click="calculate" >=</button>
         </div>
     </section>
 </template>
